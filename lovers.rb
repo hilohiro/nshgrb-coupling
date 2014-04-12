@@ -1,12 +1,15 @@
-
 def parseAttendant(line)
   name, expects = line.split(':', 2)
   [name, expects.split(',')]
 end
 
-def match(mens, ladies)
-  matched = []
-  mens.
+def weight(mens, ladies)
+  mens.map do |m, exp|
+    [m, exp.each_with_index.each_with_object({}) do |(l, i), priorities|
+      expected = ladies.fetch(l,[]).index(m)
+      priorities[l] = [i, expected].max unless expected.nil?
+    end]
+  end
 end
 
 ATTENDANTS = <<__ATT__
@@ -25,4 +28,4 @@ f:D,B,A
 __ATT__
 
 mens, ladies = ATTENDANTS.each_line.map { |line| parseAttendant(line.chop) }.partition { |n, _| ('A'..'Z') === n[0] }.map { |attendants| Hash[attendants] }
-p mens, ladies
+p weight(mens, ladies)
