@@ -3,6 +3,16 @@ def parseAttendant(line)
   [name, expects.split(',')]
 end
 
+def simple_match(mens, ladies)
+  free = mens.keys + ladies.keys
+  weight(mens, ladies).sort_by { |couple, priority| priority }.select do |(m, l), _|
+    if free.include?(m) && free.include?(l)
+      free = free - [m, l]
+      true
+    end
+  end
+end
+
 def weight(mens, ladies)
   mens.each_with_object({}) do |(m, exp), matrix|
     exp.each_with_index do |l, i|
@@ -28,4 +38,4 @@ f:D,B,A
 __ATT__
 
 mens, ladies = ATTENDANTS.each_line.map { |line| parseAttendant(line.chop) }.partition { |n, _| ('A'..'Z') === n[0] }.map { |attendants| Hash[attendants] }
-p weight(mens, ladies)
+p simple_match(mens, ladies)
