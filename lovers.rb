@@ -4,11 +4,11 @@ def parseAttendant(line)
 end
 
 def weight(mens, ladies)
-  mens.map do |m, exp|
-    [m, exp.each_with_index.each_with_object({}) do |(l, i), priorities|
+  mens.each_with_object({}) do |(m, exp), matrix|
+    exp.each_with_index do |l, i|
       expected = ladies.fetch(l,[]).index(m)
-      priorities[l] = [i, expected].max unless expected.nil?
-    end]
+      matrix[[m, l]] = [i, expected].max unless expected.nil?
+    end
   end
 end
 
