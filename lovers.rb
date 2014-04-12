@@ -5,12 +5,9 @@ end
 
 def simple_match(mens, ladies)
   free = mens.keys + ladies.keys
-  weight(mens, ladies).sort_by { |couple, priority| priority }.select do |(m, l), _|
-    if free.include?(m) && free.include?(l)
-      free = free - [m, l]
-      true
-    end
-  end
+  weight(mens, ladies).sort_by { |couple, priority| priority }.select { |(m, l), _|
+    free = free - [m, l] if free.include?(m) && free.include?(l)
+  }.map { |couple, _| couple }
 end
 
 def weight(mens, ladies)
